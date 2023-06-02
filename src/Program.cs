@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Azure.Functions.Worker.Extensions.OpenApi.Extensions;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System;
+using Azure.Identity;
 
 namespace Example.Function
 {
@@ -23,6 +25,9 @@ namespace Example.Function
                     config
                         .AddJsonFile(Path.Combine(context.HostingEnvironment.ContentRootPath, "appsettings.json"), optional: true, reloadOnChange: true)
                         .AddEnvironmentVariables();
+                    IConfiguration configuration = config.Build();
+                    var keyVaultUri = configuration.GetValue<string>("keyvault-uri");
+                    config.AddAzureKeyVault(new Uri(keyVaultUri), new DefaultAzureCredential());
                 })
                 .ConfigureServices(s =>
                 {
@@ -32,6 +37,8 @@ namespace Example.Function
                     s.AddHttpClient<FinhubHttpClient>();
                 })
                 .Build();
+
+            var test = Environment.GetEnvironmentVariable("keyvault-uri");
 
             host.Run();
         }
