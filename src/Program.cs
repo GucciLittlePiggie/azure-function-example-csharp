@@ -27,7 +27,7 @@ namespace Example.Function
                         .AddEnvironmentVariables();
                     IConfiguration configuration = config.Build();
                     var keyVaultUri = configuration.GetValue<string>("keyvault-uri");
-                    config.AddAzureKeyVault(new Uri(keyVaultUri), new DefaultAzureCredential());
+                    //config.AddAzureKeyVault(new Uri(keyVaultUri), new DefaultAzureCredential());
                 })
                 .ConfigureServices(s =>
                 {
